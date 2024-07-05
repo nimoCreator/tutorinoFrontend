@@ -1,0 +1,29 @@
+footer {
+    background-color: var( --element-background );
+    color: var( --element-fontcolor );
+    position: absolute;
+
+    bottom: var( --footer-margin );
+    right: var( --footer-margin );
+    text-align: center;
+
+    padding: 0.5rem;
+
+    border-radius: 1rem 1rem 0.5rem 0.5rem;
+
+    outline: 2px solid #fff4;
+    outline-offset: 2px;
+}
+
+view.welcome footer {
+    left: var( --footer-margin );
+}
+
+view.panel footer {
+    left: calc( 
+        var( --navbar-width ) 
+        + var( --navbar-margin ) * 2 
+        + var( --footer-margin ));
+
+    transition: left .3s ease-in-out;
+}

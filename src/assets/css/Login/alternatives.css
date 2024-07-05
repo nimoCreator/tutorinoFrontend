@@ -1,0 +1,87 @@
+/* #region alternate login options */
+
+
+#alternatives {
+    display: flex;
+    flex-direction: column;
+
+    height: var(--navbar-height);
+
+    padding: 2rem;
+    gap: 0.5rem;
+    min-width: clamp(35rem, 50vw, 70rem);
+    margin-top: var(--navbar-margin);
+    margin-bottom: var(--navbar-margin);
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--element-background);
+    border-radius: var(--inner-border-radius);
+    outline: 2px solid #fff4;
+    outline-offset: 2px;
+
+}
+#alternatives > span {
+    font-size: 0.75rem;
+    color: #444;
+    padding: 0.2rem 1rem;
+    border-radius: 10rem;
+    background-image: linear-gradient(30deg, #fffa, #fffd);
+    box-shadow: #0004 -0.2rem 0.2rem 0.4rem;
+}
+#alternatives > .options {
+    grid-area: auto / auto / auto / span 3;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem
+}
+#alternatives > .options > div {
+    transition: 0.5s;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 3rem; 
+    background-image: linear-gradient(30deg, #fffa, #fffd);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: #0004 -0.2rem 0.2rem 0.4rem;
+
+    cursor: pointer;
+}
+#alternatives > .options > div:hover {
+    width: 6rem;
+    transition: 0.2s;
+    background-color: #ddd;
+    box-shadow: #0004 -0.3rem 0.3rem 0.8rem;
+    transform: scale(1.1) translateY(-0.1rem);
+}
+#alternatives > .options > div:active {
+    transition: 0.05s;
+    background-color: #fff;
+    box-shadow: #0004 -0.1rem 0.1rem 0.2rem;
+    transform: scale(0.98) translateY(0.2rem);
+}
+#alternatives > .options > div > img {
+    transition: transform 0.5s, opacity 0.5s, filter 0.5s;
+    height: 2rem;
+    width: 2rem;
+    opacity: 0.8;
+    filter: saturate(1);
+}
+#alternatives > .options > div:hover>img {
+    transition: transform 0.2s, opacity 0.2s, filter 0.2s;
+    transform: scale(1.05);
+    opacity: 1;
+    filter: saturate(1);
+}
+#alternatives > .options > div:active>img {
+    transition: transform 0.05s, opacity 0.05s, filter 0.05s;
+    transform: scale(1.10);
+    opacity: 1;
+}
+/* #endregion alternate login options */

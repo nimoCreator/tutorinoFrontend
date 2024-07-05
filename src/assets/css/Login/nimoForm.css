@@ -1,0 +1,195 @@
+
+main:has(.nimoForm) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - var(--navbar-height) * 2 - var(--navbar-margin) * 4);
+    width: 100%;
+}
+
+.nimoForm {
+    box-sizing: border-box;
+    background-color: var(--element-background, #f5f5f5dd);
+    color: var(--element-fontcolor, #333);
+
+    outline: 2px solid #fff4;
+    outline-offset: 2px;
+
+    padding: 1.5rem 3rem;
+    border-radius: 0.5rem;
+
+    width: clamp(35rem, 50vw, 70rem);
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+
+    transition: visibility 0s 0s, opacity 0.5s 0s, transform 0.5s 0s;
+}
+authorization > .hidden {
+    visibility: hidden; 
+
+    opacity: 0;
+    transform: translateY(2rem);
+
+    transition: visibility 0s 0.5s, opacity 0.5s 0s, transform 0.5s 0s;
+}
+
+
+/* #region input panel */
+.nimoForm .panel {
+    transition: background-color 1s;
+    background-color: #fffa;
+    border-radius: 2rem;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    padding-right: 0.25rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    height: 2rem;
+    box-shadow: #0004 -0.2rem 0.2rem 0.4rem;
+}
+.nimoForm .panel:has(input:disabled) {
+    background-color: #ddda;
+}
+.nimoForm .panel:has(input:disabled) > div:first-child {
+    background-color: #eeef;
+}
+.nimoForm .panel:hover,
+.nimoForm .panel:focus {
+    transition: background-color 0.5s;
+    background-color: #fffa;
+}
+.nimoForm .panel>div:first-child {
+    transition: background-color 1s;
+    background-color: #ffff;
+    height: 2rem;
+    width: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    box-shadow: #0002 0rem 0rem 0.8rem; 
+}
+.nimoForm .panel:hover>div:first-child,
+.nimoForm .panel:focus>div:first-child {
+    transition: background-color 0.5s;
+    background-color: #FFF;
+}
+.nimoForm .panel>div>img {
+    height: 1rem;
+    filter: invert(0.5)
+}
+.nimoForm .panel>input {
+    transition: background-color 1s, padding 2s;
+    background-color: #FFFFFF00;
+    padding: 0.25rem;
+    border-radius: 2rem;
+    border: none;
+    outline: none;
+    width: 100%;
+}
+.nimoForm .panel:hover>input,
+.nimoForm .panel:focus>input {
+    transition: padding 0.5s;
+    padding: 0.25rem 0.5rem;
+}
+.nimoForm .panel>input:focus {
+    transition: background-color 0.5s, padding 0.5s;
+    padding: 0.25rem 1rem !important;
+}
+
+.nimoForm .panel>input::placeholder
+{ 
+    color: #0004 !important;
+    opacity: 1 !important;
+}
+.nimoForm .panel.password>input {
+    input-security: disc;
+}
+.nimoForm .panel.password>input.show {
+    input-security: none !important;
+    -webkit-text-security: none !important;
+}
+.nimoForm .panel.password {
+    grid-template-columns: 3rem 1fr 3rem;
+    padding-right: 0rem;
+}
+.nimoForm .panel.password > button {
+    height: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    border-radius: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 1s, box-shadow 1s;
+}
+.nimoForm .panel.password > button:hover,
+.nimoForm .panel.password > button:focus {
+    transition: background-color 0.2s, box-shadow 0.2s;
+    background-color: #FFFFFF;
+    box-shadow: #0002 0rem 0rem 0.8rem;
+}
+.nimoForm .panel.password>button>img {
+    transition: transform 1s;
+    height: 0.75rem;
+    filter: invert(0.5);
+}
+.nimoForm .panel.password>button:hover>img,
+.nimoForm .panel.password>button:focus>img {
+    transition: transform 0.2s;
+    transform: scale(1.1);
+}
+.nimoForm .panel.password>button:active>img {
+    transition: transform 0.05s;
+    transform: scale(0.95);
+}
+/* #endregion panel */
+
+/* #region button */
+
+form input.submit {
+    height: 2rem;
+    width: min(20rem, 60vw);
+    margin-inline: auto;
+
+    background: #00aaff;
+
+    border: none;
+    color: white;
+    border-radius: 100px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: #0004 -0.1rem 0.1rem 0.4rem;
+
+    transition: background-color 0.4s, transform 0.6s, box-shadow 0.6s;
+}
+form input.submit:hover, 
+form input.submit:focus {
+    transform: translateY(-0.1rem);
+    background: #08b9ff;
+    cursor: pointer;
+    box-shadow: #0004 -0.3rem 0.3rem 0.8rem;
+
+
+    transition: background-color 0.2s, transform 0.3s, box-shadow 0.3s;
+}
+form input.submit:active {
+    transform: translateY(0.2rem);
+    background-color: #0092f3;
+    cursor: pointer;
+    box-shadow: #0004 -0.1rem 0.1rem 0.2rem;
+
+    transition: background-color 0.01s, transform 0.01s, box-shadow 0.01s;
+}
+
+/* #endregion button */
+

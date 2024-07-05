@@ -1,0 +1,55 @@
+main {
+    display: flex;
+    flex-direction: column;
+    
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+
+    overflow-y: auto;
+
+    padding-right: var(--navbar-margin);
+}
+
+view.welcome main {
+    margin-top: calc( var(--navbar-height) + var(--navbar-margin) * 2 );
+
+    padding-inline: var(--navbar-margin);
+}
+
+view.panel main {
+    margin-top: var(--navbar-margin);
+    margin-left: calc( var(--navbar-width) + var(--navbar-margin) * 2 );
+    transition: margin-left .3s ease-in-out;
+}
+
+main > .panel {
+    background: var(--element-background, #f5f5f588);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    color: black;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    width: clamp(320px, 50vw, 1200px);
+    
+    min-width: fit-content;
+    margin-inline: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+main > .panel > h1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    font-size: 2rem;
+}
+main > .panel > .content {
+    font-size: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}

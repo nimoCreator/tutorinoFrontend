@@ -1,0 +1,80 @@
+.has-tooltip {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tooltip {
+    white-space: nowrap;
+
+    --transition-out-time: 0.2s;
+    --delay-out-time: 0.05s;
+    --transition-in-time: 0.2s;
+    --delay-in-time: 0.8s;
+
+    display: flex;
+
+    position: absolute;
+    top: 0;
+
+    align-self: center;
+    justify-self: center;
+
+    /* visibility: hidden; */
+    opacity: 0;
+
+    pointer-events: none;
+    user-select: none;
+
+    background-color: var(--tooltip-background-color, black);
+    color: var(---tooltip-color, white);
+    padding: var(--tooltip-padding-block, 0.1rem) var(--tooltip-padding-inline, 1rem);
+    border-radius: var(--tooltip-border-radius, 0.5rem);
+
+    transition: 
+        transform var(--transition-out-time) var(--delay-out-time), 
+        visability 0s calc(var(--delay-out-time) + var(--transition-out-time)),
+        opacity var(--transition-out-time) var(--delay-out-time);
+}
+
+.has-tooltip:hover > .tooltip {
+    visibility: visible;
+    opacity: 1;    
+    transition: 
+        transform var(--transition-in-time) var(--delay-in-time), 
+        visability 0s calc(var(--delay-in-time) + var(--transition-in-time)),
+        opacity var(--transition-in-time) var(--delay-in-time);
+}
+.tooltip::after {
+    content: "";
+    position: absolute;
+    border-width: 5px;
+    border-style: solid;
+}
+
+.tooltip.tooltip-up {
+    transform: scale(1) translate(0, -100%) !important;
+}
+.has-tooltip:hover > .tooltip.tooltip-up {
+    transform: scale(1) translate(0, -150%) !important;
+}
+.tooltip.tooltip-up::after {
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-color: var(--tooltip-background-color, black) transparent transparent transparent;
+}
+
+.tooltip.tooltip-down {
+    transform: scale(1) translate(0, 100%) !important;
+}
+.has-tooltip:hover > .tooltip.tooltip-down {
+    transform: scale(1) translate(0, 150%) !important;
+}
+.tooltip.tooltip-down::after {
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-color: transparent transparent var(--tooltip-background-color, black) transparent;
+}

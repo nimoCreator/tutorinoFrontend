@@ -1,0 +1,208 @@
+@import "@/assets/css/vars.css";
+
+/* #region BASE */
+
+view.panel #navbar {
+    position: fixed;
+    top: var(--navbar-margin);
+    left: var(--navbar-margin);
+    bottom: var(--navbar-margin);
+    width: var(--navbar-width);
+    background: var(--element-background, #f5f5f588);
+    padding: var(--panelnavbar-padding);
+    border-radius: var(--inner-border-radius);
+    z-index: 20000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    transition: width .3s ease-in-out;
+    outline: 2px solid #fff4;
+    outline-offset: 2px;
+    
+    color: black;
+}
+
+view.panel hr{
+    width: 100%;
+}
+
+/* #endregion BASE */
+
+/* #region SECTIONS */
+
+view.panel #navbar > topsection,
+view.panel #navbar > bottomsection {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* #endregion SECTIONS */
+
+/* #region LOGO */
+
+view.panel #navbar #icon_tutorino {
+    border-radius: var(--inner-border-radius);
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: calc(var(--inner-border-radius) / 2);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: var(--navbar-element-height);
+    gap: 0.5rem;
+}
+view.panel #navbar #icon_tutorino > h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #000;
+    white-space: nowrap;
+}
+view.panel #navbar #icon_tutorino > img {
+    width: var(--navbar-element-height);
+    height: var(--navbar-element-height);
+    object-fit: cover;
+
+    filter: drop-shadow(0 0 0.5rem #0004);
+}
+
+/* #endregion LOGO */
+
+/* #region NAV */
+
+view.panel #navbar > * > nav {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+view.panel #navbar > * > nav > a {
+    display: flex;
+    flex-direction: row;
+    gap: 0rem;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 0.5rem;
+
+    cursor: pointer;
+    width: 0;
+    
+    text-decoration: none;
+
+    
+    transition: all 0.5s ease-in-out;
+}
+view.panel #navbar:hover > * > nav > a {
+    gap: 1rem;
+    width: calc( var(--navbar-width) - 2 * var(--panelnavbar-padding) );
+}
+view.panel #navbar > * > nav > a > .icon  {
+    width: calc( var(--navbar-element-height) * 0.71 );
+    height: calc( var(--navbar-element-height) * 0.71 );
+    pointer-events: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+view.panel #navbar > * > nav > a > .icon > img {
+    width: calc( var(--navbar-element-height) * 0.71 );
+    height: calc( var(--navbar-element-height) * 0.71 );
+    pointer-events: none;
+    filter: invert(0.5) brightness(1.6);
+}
+view.panel #navbar > * > nav > a > span {
+    white-space: nowrap;
+    opacity: 0;
+    width: 0;
+    transform-origin: left;
+    padding-left: 0.25rem;
+    transition: 0.1s;
+}
+
+view.panel #navbar:hover > * > nav > a > span,
+view.panel #navbar:focus > * > nav > a > span {
+    transition: opacity .2s .2s ease-in-out;
+    opacity: 1;
+}
+
+
+/* #endregion NAV */
+
+/* #region USER */
+
+view.panel #navbar > * > .user_portrait {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+}
+view.panel #navbar > * > .user_portrait > name,
+view.panel #navbar > * > .user_portrait > type {
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity .2s .0s ease-in-out;
+    transform-origin: left;
+}
+view.panel #navbar:hover > * > .user_portrait > name,
+view.panel #navbar:hover > * > .user_portrait > type,
+view.panel #navbar:focus > * > .user_portrait > name,
+view.panel #navbar:focus > * > .user_portrait > type {
+    transition: opacity .2s .2s ease-in-out;
+    opacity: 1;
+}
+
+view.panel #navbar > * > .user_portrait > #pfp {
+    width: var(--navbar-element-height);
+    height: cvar(--navbar-element-height);
+}
+view.panel #navbar > * > .user_portrait > #pfp > img {
+    width: var(--navbar-element-height);
+    height: var(--navbar-element-height);
+
+    border-radius: var(--inner-border-radius);
+}
+
+/* #endregion USER */
+
+/* #region HOVER ANIMATIONS */
+
+view.panel #navbar > * > nav > a {
+    background-color: #22aaff00;
+    outline: 0.125rem solid #22aaff00;
+    color: #888;
+    border-radius: 0.125rem;
+
+    transition: 0.4s;
+}
+view.panel #navbar > * > nav > a > .icon > img {
+    transition: 0.4s;
+}
+view.panel #navbar > * > nav > a:hover {
+    background-color: #22aaff11;
+    outline: 0.5rem solid #22aaff11;
+    color: #111;
+
+    transition: 0.2s;
+}
+
+view.panel #navbar > * > nav > a:hover > .icon > img  {
+    filter: invert(0) brightness(1);
+    transition: 0.2s;
+}
+view.panel #navbar > * > nav > a:active {
+    background-color: #009dff;
+    outline: 0.25rem solid #009dff;
+    color: #fff;
+
+    transition: 0.05s;
+}
+view.panel #navbar > * > nav > a:active > .icon > img  {
+    filter: invert(0.5) brightness(2);
+    opacity: 0.75;
+    transition: 0.05s;
+}
+
+/* #endregion HOVER ANIMATIONS */
