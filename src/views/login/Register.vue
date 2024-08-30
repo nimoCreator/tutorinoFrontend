@@ -9,7 +9,7 @@
         </div>
         <div class="panel">
             <div>
-                <img src="@/assets/img/Login/user.svg" alt="user icon">
+                <img src="@/assets/img/Login/key.svg" alt="user icon">
             </div>
             <input id="register_login" placeholder="login" type="text" v-model="login" :disabled="isLoginGiven">
         </div>
@@ -129,7 +129,8 @@ export default {
             });
 
             if (!response.ok) {
-                    throw new Error(`<b>status:</b> <br/> ${response.status} <br/> <b>message:</b> <br/> ${response.message}`);
+                const message = await response.text();
+                throw new Error(`<b>status:</b> <br/> ${response.status} <br/> <b>message:</b> <br/> ${message}`);
             }
 
             const data = await response.json();
@@ -165,7 +166,8 @@ export default {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`<b>status:</b> <br/> ${response.status} <br/> <b>message:</b> <br/> ${response.message}`);
+                    const message = await response.text();
+                    throw new Error(`<b>status:</b> <br/> ${response.status} <br/> <b>message:</b> <br/> ${message}`);
                 }   
 
                 const data = await response.json();

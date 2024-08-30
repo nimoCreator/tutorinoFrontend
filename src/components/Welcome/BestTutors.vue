@@ -1,6 +1,6 @@
 <template>
     <div class="default_style">
-        <h1>WelcomeStats</h1>
+        <h1>Best Tutors</h1>
     </div>
 </template>
 

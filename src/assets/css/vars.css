@@ -18,11 +18,15 @@
 
     --footer-margin: 1rem;
     --footer-color: #f5f5f5;
-
+    --footer-height: 2rem;
+    
     /* elements */
 
     --element-background: #fafafaf8;
     --element-fontcolor: #333;
+
+
+
 }
 
 :root:has(#navbar:hover) {

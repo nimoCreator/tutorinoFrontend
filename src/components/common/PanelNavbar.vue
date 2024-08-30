@@ -50,11 +50,11 @@
                 </router-link>
             </nav>
             <hr />
-            <router-link to="/" class="user_portrait">
+            <router-link to="/" class="user_portrait" @click.prevent="logout">
                 <div id="pfp">
                     <img src="@/assets/img/user.png">
                 </div>
-                <name>Wyloguj się</name>
+                <span class="name">Wyloguj się</span>
             </router-link>
         </div>    
     </div>
@@ -64,7 +64,6 @@
 export default {
     name: "PanelNavbar",
     mounted() {
-        console.log("PanelNavbar component mounted");
         this.checkSession();
     },
     methods: {
@@ -73,12 +72,16 @@ export default {
                 let uuid = localStorage.getItem('uuid');
                 console.log(uuid)
                 if ( uuid == null) {
-                    this.$router.push({ path: '/enter' });
+                    this.$router.push({ path: '/' });
                 }
             } catch (error) {
                 console.error("Error checking session:", error);
             }
         },
+        logout() {
+            localStorage.removeItem('uuid');
+            this.$router.push({ path: '/login' });
+        }
     }
 };
 </script>

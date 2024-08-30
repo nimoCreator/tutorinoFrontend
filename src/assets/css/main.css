@@ -9,18 +9,20 @@ main {
     overflow-y: auto;
 
     padding-right: var(--navbar-margin);
+
+    padding-bottom: calc( var(--footer-height) + var(--footer-margin) * 2 );
 }
 
 view.welcome main {
-    margin-top: calc( var(--navbar-height) + var(--navbar-margin) * 2 );
+    padding-top: calc( var(--navbar-height) + var(--navbar-margin) * 2 );
 
     padding-inline: var(--navbar-margin);
 }
 
 view.panel main {
-    margin-top: var(--navbar-margin);
-    margin-left: calc( var(--navbar-width) + var(--navbar-margin) * 2 );
-    transition: margin-left .3s ease-in-out;
+    padding-top: var(--navbar-margin);
+    padding-left: calc( var(--navbar-width) + var(--navbar-margin) * 2 );
+    transition: padding-left .3s ease-in-out;
 }
 
 main > .panel {

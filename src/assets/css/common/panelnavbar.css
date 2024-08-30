@@ -139,17 +139,18 @@ view.panel #navbar > * > .user_portrait {
     align-items: center;
     gap: .5rem;
 }
-view.panel #navbar > * > .user_portrait > name,
-view.panel #navbar > * > .user_portrait > type {
+view.panel #navbar > * > .user_portrait > .name,
+view.panel #navbar > * > .user_portrait > .type {
     white-space: nowrap;
     opacity: 0;
     transition: opacity .2s .0s ease-in-out;
     transform-origin: left;
+    color: #000;
 }
-view.panel #navbar:hover > * > .user_portrait > name,
-view.panel #navbar:hover > * > .user_portrait > type,
-view.panel #navbar:focus > * > .user_portrait > name,
-view.panel #navbar:focus > * > .user_portrait > type {
+view.panel #navbar:hover > * > .user_portrait > .name,
+view.panel #navbar:hover > * > .user_portrait > .type,
+view.panel #navbar:focus > * > .user_portrait > .name,
+view.panel #navbar:focus > * > .user_portrait > .type {
     transition: opacity .2s .2s ease-in-out;
     opacity: 1;
 }
