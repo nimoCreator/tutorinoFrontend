@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { getLS } from '@/assets/js/functions.js';
 export default {
     name: 'PanelInstructions',
     data() {
@@ -23,7 +24,12 @@ export default {
     methods: {
         async checkLoginStatus() {
             try {
-                const uuid = localStorage.getItem('uuid'); // Assuming UUID is stored in localStorage
+                let ls = getLS()
+                let uuid = ls && ls.loggedInUser && ls.loggedInUser.uuid;
+                if (!uuid) {
+                    this.$router.push({ path: '/login' });
+                    throw new Error('UUID not found in localStorage');
+                }
                 const response = await fetch('http://localhost/tutorinoAPIs/checkSession.php', {
                     method: 'POST',
                     headers: {
@@ -38,8 +44,7 @@ export default {
                     if (data.status === 'success') {
                         this.isLoggedIn = true;
                         this.username = data.nick; // Example: Accessing nick from PHP response
-                        if(this.username == "" || this.username == undefined || this.username == null) this.username = data.full_name;
-                        // Update other user-related data as needed
+                        if(this.username == "" || this.username == undefined || this.username == null) this.username = data.fullName;
                     }
                 } else if (response.status === 401) {
                     this.isLoggedIn = false;

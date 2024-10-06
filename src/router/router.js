@@ -7,7 +7,7 @@ import About from '../views/About.vue'
 import Calendar from '../views/panel/MyCalendar.vue'
 import MyOffers from '../views/panel/MyOffers.vue'
 import Chats from '../views/panel/Chats.vue'
-import Find from '../views/panel/SearchLessons.vue'
+import Find from '../views/SearchLessons.vue'
 import Enter from '../views/login/Enter.vue'
 import Login from '../views/login/Login.vue'
 import Register from '../views/login/Register.vue'
@@ -18,7 +18,7 @@ import Support from '../views/Support.vue'
 import Tutor from '../views/TutorProfile.vue'
 import Welcome from '../views/Welcome.vue'
 import TransactionHistory from '../views/panel/TransactionHistory.vue'
-import e404 from '../views/e404.vue'
+// import e404 from '../views/e404.vue'
 import MyAccount from '../views/panel/MyAccount.vue'
 
 const routes = [
@@ -31,9 +31,9 @@ const routes = [
     },
     // front pages
     {
-        path: '/find/:search?',
+        path: '/search',
         name: 'Find',
-        component: Find,
+        component: Welcome,
         meta: { navbartype: 'welcome' }
     },
     {
@@ -55,7 +55,7 @@ const routes = [
         meta: { navbartype: 'welcome' }
     },
     {
-        path: '/tutor/:id',
+        path: '/tutor/:handle',
         name: 'Tutor',
         component: Tutor,
         meta: { navbartype: 'welcome' }
@@ -87,13 +87,13 @@ const routes = [
         meta: { navbartype: 'panel' }
     },
     {
-        path: '/panel/search/:search?',
+        path: '/panel/find/:search?',
         name: 'Find',
         component: Find,
         meta: { navbartype: 'panel' }
     },
     {
-        path: '/panel/chats/:chat?',
+        path: '/panel/chat/:chatid?/:tutorhandle?',
         name: 'Chats',
         component: Chats,
         meta: { navbartype: 'panel' }
@@ -129,12 +129,12 @@ const routes = [
         meta: { navbartype: 'panel' }
     },
     // error 404
-    {
-        path: '/:pathMatch(.*)*',
-        name: 'e404',
-        component: e404,
-        meta: { navbartype: 'welcome' }
-    }
+    // {
+    //     path: '/:pathMatch(.*)*',
+    //     name: 'e404',
+    //     component: e404,
+    //     meta: { navbartype: 'welcome' }
+    // }
 ]
 
 const router = createRouter({

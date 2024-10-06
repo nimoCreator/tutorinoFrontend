@@ -25,7 +25,7 @@
     --element-background: #fafafaf8;
     --element-fontcolor: #333;
 
-
+    --base-width: clamp(10rem, 90%, 60rem);
 
 }
 

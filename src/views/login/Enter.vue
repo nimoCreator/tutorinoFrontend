@@ -1,20 +1,23 @@
 <template>
-    <form id="enter" class="nimoForm active" @submit.prevent="handleSubmit">
-        <h1>Witaj!</h1>
-        <div class="panel">
-            <div>
-                <img :src="loginEmailIcon" alt="user icon">
+    <div class="nimoFormContainer">
+        <form id="enter" class="nimoForm active" @submit.prevent="handleSubmit">
+            <h1>Witaj!</h1>
+            <div class="panel">
+                <div>
+                    <img :src="loginEmailIcon" alt="user icon">
+                </div>
+                <input id="enter_login" placeholder="email / login" type="text" v-model="loginOrEmail" @input="updateLoginEmailIcon" >
             </div>
-            <input id="enter_login" placeholder="email / login" type="text" v-model="loginOrEmail" @input="updateLoginEmailIcon" >
-        </div>
-        <input id="enter_button" class="submit" type="submit" value="Dalej"/>
-    </form>
-    <Alternatives/>
+            <input id="enter_button" class="submit" type="submit" value="Dalej"/>
+        </form>
+        <Alternatives/>
+    </div>
 </template>
 
 <script>
 import Alternatives from "@/components/Login/Alternatives.vue";
 import { toast_notification } from "@/assets/js/nimoToastNotifications";
+import { getLS } from "@/assets/js/functions";
 
 export default {
     name: "EnterLoginPanel",
@@ -33,29 +36,14 @@ export default {
     methods: {
         async checkSession() {
             try {
-                let uuid = localStorage.getItem('uuid');
-                console.log(uuid)
-                if ( uuid != null) {
-                    this.$router.push({ path: '/panel' });
+                let LS = getLS();
+                let uuid = LS.loggedInUser.uuid;
+                if (uuid) {
+                    this.$router.push({ name: '/panel' });
                 }
             } catch (error) {
-                console.error("Error checking session:", error);
+                console.error("not logged in", error);
             }
-            //     const response = await fetch('http://localhost/tutorinoAPIs/checkSession.php', {
-            //         method: 'GET',
-            //         credentials: 'include'
-            //     });
-                
-            //     if (response.ok) {
-            //         const data = await response.json();
-            //         if (data.status === 'success') {
-            //             // Redirect to panel if logged in
-            //             this.$router.push({ name: 'Panel' });
-            //         }
-            //     }
-            // } catch (error) {
-            //     console.error("Error checking session:", error);
-            // }
         },
         updateLoginEmailIcon() {
             this.loginEmailIcon = this.loginOrEmail.includes('@') ? require('@/assets/img/Login/email.svg') : require('@/assets/img/Login/user.svg');
@@ -67,8 +55,8 @@ export default {
                 toast_notification({
                     type: "error", 
                     time: "5", 
-                    label: "Puste pole email/login", 
-                    content: "Wpisz poprawny adres email lub login"
+                    label: "Empty fieldemail/login", 
+                    content: "Enter your email or login"
                 });
                 return;
             }

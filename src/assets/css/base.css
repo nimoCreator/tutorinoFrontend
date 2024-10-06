@@ -118,7 +118,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-textarea, input {
+textarea, input, select {
     transition: background-color 1s, padding 2s;
     background-color: #FFFFFFFF;
     border: 1px solid #ccc;

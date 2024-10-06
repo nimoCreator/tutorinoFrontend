@@ -2,21 +2,20 @@
     <div class="panel">
         <h1>Notifications</h1>
         <div class="content">
-            <ul v-if="notifications.length > 0">
-                <li v-for="notification in notifications" :key="notification.id">
-                    <router-link :to= notification.link >
-                        <h2>{{ notification.label }}</h2>
-                        <h5>{{ notification.text }}</h5>
-                        <hr>
-                    </router-link>
-                </li>
-            </ul>
+            <div v-if="notifications.length > 0" class="notifications">
+                <router-link v-for="notification in notifications" :to= notification.link :key="notification.id">
+                    <h2>{{ notification.label }}</h2>
+                    <h5>{{ notification.text }}</h5>
+                </router-link>
+            </div>
             <p v-else>No notifications found.</p>
         </div>
     </div>
 </template>
 
 <script>
+import { getLS, SQL } from '@/assets/js/functions';
+
 export default {
     name: 'NotificationsView',
     data() {
@@ -29,24 +28,19 @@ export default {
     },
     methods: {
         async fetchNotifications() {
+            let uuid;
             try {
-                const response = await fetch('http://localhost/tutorinoAPIs/getAllNotifications.php', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log(data); // Check console to see the response data structure
-
-                if (data.status === 'success') {
-                    this.notifications = data.notifications; // Assuming notifications are returned in an array
-                } else {
-                    console.error("Error fetching notifications:", data.message);
-                }
+                let LS = getLS();
+                uuid = LS.loggedInUser.uuid;
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
+                this.$router.push('/');
+            }
+            try 
+            {
+                const response = await SQL(`SELECT * FROM notifications WHERE uuid = ${uuid} ORDER BY timestamp DESC`);
+                console.log(response);
+                this.notifications = response.data;
             } catch (error) {
                 console.error("Error fetching notifications:", error);
             }
@@ -56,5 +50,22 @@ export default {
 </script>
 
 <style scoped>
-/* Add your scoped styles here */
+    .panel {
+        width: 100%;
+    }
+    .notifications {
+        list-style-type: none;
+        padding: 1rem;
+
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .notifications > * {
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
 </style>

@@ -43,7 +43,7 @@ view.welcome #navbar .logo {
 view.welcome #navbar .logo > img {
     width: calc( var(--navbar-height) - var(--homenavbar-padding) * 4 );
     height: calc( var(--navbar-height) - var(--homenavbar-padding) * 4 );
-    object-fit: cover;
+
 
     filter: drop-shadow(0 0 1rem #0004);
 }
@@ -78,6 +78,8 @@ view.welcome #navbar .user > .pfp > img {
     width: calc(var(--navbar-height) - var(--homenavbar-padding) * 4);
     height: calc(var(--navbar-height) - var(--homenavbar-padding) * 4);
     border-radius: var(--inner-border-radius);
+
+    object-fit: cover;
 }
 
 

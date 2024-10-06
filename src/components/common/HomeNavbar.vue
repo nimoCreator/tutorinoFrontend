@@ -6,7 +6,7 @@
         </router-link>
         <router-link :to="userLoggedIn ? '/panel' : '/enter'" class="user" id="user_profile">
             <div class="username">
-                {{ userLoggedIn ? 'Witaj ' + username : 'Zaloguj się' }}
+                {{ userLoggedIn ? 'Welcome ' + username : 'Login' }}
             </div>
             <div class="pfp">
                 <img :src="userPfp" alt="User Profile" />
@@ -16,12 +16,15 @@
 </template>
 
 <script>
+import { getLS } from "@/assets/js/functions.js";
+import { pfpPath } from "@/assets/js/consts.js";
+
 export default {
     name: "HomeNavbar",
     data() {
         return {
             userLoggedIn: false,
-            userPfp: require('@/assets/img/user.png'),
+            userPfp: pfpPath + 'user.png',
             username: 'sdfsdf',
         };
     },
@@ -31,7 +34,8 @@ export default {
     methods: {
         async checkLoginStatus() {
             try {
-                const uuid = localStorage.getItem('uuid'); // Assuming UUID is stored in localStorage
+                let ls = getLS();
+                let uuid = ls && ls.loggedInUser && ls.loggedInUser.uuid;
                 if (!uuid) {
                     throw new Error('UUID not found in localStorage');
                 }
@@ -45,30 +49,27 @@ export default {
                 });
 
                 if (!response.ok) {
+                    console.error(`HTTP error! status: ${response}`);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 if (response.status === 401) {
                     this.userLoggedIn  = false;
                 } 
-
                 const data = await response.json();
-                console.log(data);
                 if (data.status == 'success') {
 
                     this.userLoggedIn  = true;
 
                     if(data.pfp !== null) {
-                        this.userPfp = data.pfp;
+                        this.userPfp = pfpPath + data.pfp;
                     }
-                    if(data.nick !== null) {
-                        this.username = data.nick;
-                    } else {
-                        this.username = data.full_name;
+                    else
+                    {
+                        this.userPfp = pfpPath + 'user.png';
                     }
+                    this.username = data.nick || data.fullName || data.handle;
                 }
-                console.log(this.isLoggedIn);
-                console.log(this.username)
 
             } catch (error) {
                 console.error("Error checking login status:", error);

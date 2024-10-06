@@ -164,6 +164,8 @@ view.panel #navbar > * > .user_portrait > #pfp > img {
     height: var(--navbar-element-height);
 
     border-radius: var(--inner-border-radius);
+
+    object-fit: cover;
 }
 
 /* #endregion USER */

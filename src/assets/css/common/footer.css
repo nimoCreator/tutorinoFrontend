@@ -28,8 +28,7 @@ view.welcome footer {
 view.panel footer {
     left: calc( 
         var( --navbar-width ) 
-        + var( --navbar-margin ) * 2 
-        + var( --footer-margin ));
+        + var( --navbar-margin ) * 2);
 
     transition: left .3s ease-in-out;
 }

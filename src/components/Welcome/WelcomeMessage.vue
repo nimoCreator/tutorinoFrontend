@@ -1,14 +1,13 @@
 <template>
     <div class="welcome_message">
         <h1>
-            Hejka!
+            Hi!
         </h1>
         <h2>
-            Witaj na Tutorino,
-        
+            Welcome to Tutorino
         </h2>
         <h3>
-            tutaj znajdziesz i zorganizujesz sobie koreptycje!
+            you can find the best tutors her
         </h3>
     </div>
 </template>

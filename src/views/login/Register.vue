@@ -1,48 +1,51 @@
 <template>
-    <form id="register" class="nimoForm active" @submit.prevent="handleSubmit">
-        <h1>Rejestracja</h1>
-        <div class="panel">
-            <div>
-                <img src="@/assets/img/Login/email.svg" alt="email icon">
+    <div class="nimoFormContainer">
+        <form id="register" class="nimoForm active" @submit.prevent="handleSubmit">
+            <h1>Rejestracja</h1>
+            <div class="panel">
+                <div>
+                    <img src="@/assets/img/Login/email.svg" alt="email icon">
+                </div>
+                <input id="register_email" placeholder="email" type="email" v-model="email" :disabled="isEmailGiven">
             </div>
-            <input id="register_email" placeholder="email" type="email" v-model="email" :disabled="isEmailGiven">
-        </div>
-        <div class="panel">
-            <div>
-                <img src="@/assets/img/Login/key.svg" alt="user icon">
+            <div class="panel">
+                <div>
+                    <img src="@/assets/img/Login/key.svg" alt="user icon">
+                </div>
+                <input id="register_login" placeholder="login" type="text" v-model="login" :disabled="isLoginGiven">
             </div>
-            <input id="register_login" placeholder="login" type="text" v-model="login" :disabled="isLoginGiven">
-        </div>
-        <div class="panel">
-            <div>
-                <img src="@/assets/img/Login/user.svg" alt="user icon">
+            <div class="panel">
+                <div>
+                    <img src="@/assets/img/Login/user.svg" alt="user icon">
+                </div>
+                <input id="register_fullname" placeholder="imie i nazwisko" type="text" v-model="name">
             </div>
-            <input id="register_fullname" placeholder="imie i nazwisko" type="text" v-model="name">
-        </div>
-        <div class="panel password">
-            <div>
-                <img src="@/assets/img/Login/padlock.svg" alt="password icon">
+            <div class="panel password">
+                <div>
+                    <img src="@/assets/img/Login/padlock.svg" alt="password icon">
+                </div>
+                <input class="nimoweb_password" id="register_password" placeholder="hasło" :type="showPassword ? 'text' : 'password'" v-model="password">
+                <button id="register_password1_toggle" class="nimoweb_password_eye" type="button" @click="togglePasswordVisibility('password')">
+                    <img :src="showPassword ? require('@/assets/img/Login/eye_open.svg') : require('@/assets/img/Login/eye_closed.svg')" alt="toggle password visibility">
+                </button>
             </div>
-            <input class="nimoweb_password" id="register_password" placeholder="hasło" :type="showPassword ? 'text' : 'password'" v-model="password">
-            <button id="register_password1_toggle" class="nimoweb_password_eye" type="button" @click="togglePasswordVisibility('password')">
-                <img :src="showPassword ? require('@/assets/img/Login/eye_open.svg') : require('@/assets/img/Login/eye_closed.svg')" alt="toggle password visibility">
-            </button>
-        </div>
-        <div class="panel password">
-            <div>
-                <img src="@/assets/img/Login/padlock.svg" alt="password icon">
+            <div class="panel password">
+                <div>
+                    <img src="@/assets/img/Login/padlock.svg" alt="password icon">
+                </div>
+                <input class="nimoweb_password" id="register_password_repeat" placeholder="powtórz hasło" :type="showPasswordRepeat ? 'text' : 'password'" v-model="passwordRepeat">
+                <button id="register_password2_toggle" class="nimoweb_password_eye" type="button" @click="togglePasswordVisibility('passwordRepeat')">
+                    <img :src="showPasswordRepeat ? require('@/assets/img/Login/eye_open.svg') : require('@/assets/img/Login/eye_closed.svg')" alt="toggle password visibility">
+                </button>
             </div>
-            <input class="nimoweb_password" id="register_password_repeat" placeholder="powtórz hasło" :type="showPasswordRepeat ? 'text' : 'password'" v-model="passwordRepeat">
-            <button id="register_password2_toggle" class="nimoweb_password_eye" type="button" @click="togglePasswordVisibility('passwordRepeat')">
-                <img :src="showPasswordRepeat ? require('@/assets/img/Login/eye_open.svg') : require('@/assets/img/Login/eye_closed.svg')" alt="toggle password visibility">
-            </button>
-        </div>
-        <input id="register_button" class="submit" type="submit" value="Zarejestruj się"/>
-    </form>
+            <input id="register_button" class="submit" type="submit" value="Zarejestruj się"/>
+        </form>
+    </div>
 </template>
 
 <script>
 import { toast_notification } from "@/assets/js/nimoToastNotifications";
+import { getLS, setLS } from "@/assets/js/functions.js";
 
 export default {
     name: "RegisterPanel",
@@ -68,9 +71,8 @@ export default {
     methods: {
         async checkSession() {
             try {
-                let uuid = localStorage.getItem('uuid');
-                console.log(uuid)
-                if ( uuid != null) {
+                let ls = getLS();
+                if ( ls && ls.loggedInUser != null) {
                     this.$router.push({ path: '/panel' });
                 }
             } catch (error) {
@@ -170,11 +172,24 @@ export default {
                     throw new Error(`<b>status:</b> <br/> ${response.status} <br/> <b>message:</b> <br/> ${message}`);
                 }   
 
-                const data = await response.json();
+                const rawResponse = await response.text();
+                console.log('Raw response:', rawResponse);
+                
+                let data;
+                try {
+                    data = JSON.parse(rawResponse);
+                } catch (error) {
+                    console.error('Failed to parse JSON:', error);
+                    throw new Error(`Unexpected response format: ${rawResponse}`);
+                }
 
                 if (data.status === 'success') {
-                    // Save session data to local storage or Vuex store if needed
-                    localStorage.setItem('uuid', JSON.stringify(data.user));
+
+                    let ls = getLS();
+                    ls.loggedInUser = {
+                        uuid: data.uuid
+                    };
+                    setLS(ls);
 
                     toast_notification({
                         type: "success", 

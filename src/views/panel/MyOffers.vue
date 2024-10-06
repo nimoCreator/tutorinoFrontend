@@ -1,141 +1,185 @@
 <template>
-    <div class="panel">
-        <h1>Moje oferty</h1>
+    <div class="panel addOfferPanel">
+        <h1>Add a new Offer</h1>
+        <div class="row">
+            <div class="offerform">
+                <label>Offer Title</label>
+                <input type="text" v-model="newOffer.title" />
 
-        <!-- Display user's offers -->
-        <div v-if="offers.length === 0">
-            Nie masz jeszcze żadnych ofert.
-        </div>
-        <div v-for="offer in offers" :key="offer.offer_id" class="offer-card">
-            <h3>{{ offer.label }}</h3>
-            <p>{{ offer.description }}</p>
-            <p>Cena za godzinę: {{ offer.price_per_hour }} PLN</p>
-            <img :src="offer.image ? offer.image : 'https://via.placeholder.com/150'" alt="Offer Image" style="max-width: 100px; max-height: 100px;">
-            <button @click="deleteOffer(offer.offer_id)">Usuń</button>
-        </div>
-    </div>
+                <label>Offer Description</label>
+                <input type="text" v-model="newOffer.description" />
 
-    <div class="panel">
-        <h1>Dodaj ofertę</h1>
-        
-        <!-- Form to add new offer -->
-        <form @submit.prevent="addOffer">
-            <div>
-                <label>Wybierz Przedmiot</label>
-                <select v-model="newOffer.subject_id" required>
-                    <option value="1">Matematyka</option>
-                    <option value="2">Fizyka</option>
-                    <option value="3">Chemia</option>
-                    <option value="4">Biologia</option>
-                    <option value="5">Informatyka</option>
-                    <option value="6">Język Polski</option>
-                    <option value="7">Język Angielski</option>
-                    <option value="8">Języki inne...</option>
-                    <option value="9">Historia</option>
-                    <option value="10">Geografia</option>
-                    <option value="11">Inne...</option>
+                <label>Price per hour</label>
+                <input type="number" v-model="newOffer.pricePerHour" />
+
+                <label>Currency</label>
+                <select v-model="newOffer.currency">
+                    <option value="pln">PLN</option>
+                    <option value="usd">USD</option>
+                    <option value="eur">EUR</option>
                 </select>
+
+                <label>Type</label>
+                <div class="checklist">
+                    <label class="switch" for="checkboxAtOnline">
+                        <input type="checkbox" id="checkboxAtOnline" v-model="type.online" @change="updateType" />
+                        <div class="slider round"></div>
+                        <span>Online</span>
+                    </label>
+                    <label class="switch" for="checkboxAtStudents">
+                        <input type="checkbox" id="checkboxAtStudents" v-model="type.atStudents" @change="updateType" />
+                        <div class="slider round"></div>
+                        <span>at Students place</span>
+                    </label>
+                    <label class="switch" for="checkboxAtTutors">
+                        <input type="checkbox" id="checkboxAtTutors" v-model="type.atTutors" @change="updateType" />
+                        <div class="slider round"></div>
+                        <span>at Tutors place</span>
+                    </label>
+                    <label class="switch" for="checkboxElsewhere">
+                        <input type="checkbox" id="checkboxElsewhere" v-model="type.otherPlace" @change="updateType" />
+                        <div class="slider round"></div>
+                        <span>at Other location</span>
+                    </label>
+                </div>
+
+                <button @click="addNewOffer()">Post new offer</button>
             </div>
-            <div>
-                <label>Cena za godzinę (PLN):</label>
-                <input type="number" v-model="newOffer.price_per_hour" required>
-            </div>
-            <div>
-                <label>Tytuł:</label>
-                <input type="text" v-model="newOffer.label" required>
-            </div>
-            <div>
-                <label>Opis:</label>
-                <textarea v-model="newOffer.description" required></textarea>
-            </div>
-            <div>
-                <label>Obrazek (opcjonalnie):</label>
-                <input type="text" v-model="newOffer.image">
-            </div>
-            <button type="submit">Dodaj ofertę</button>
-        </form>
+            
+            <Offer :offer="newOffer"/>
+        </div>
     </div>
+    <div class="panel">
+        <h1>My Offers</h1>
+        <div class="offers">
+            <Offer v-for="offer in offers" :key="offer.offerId" :offer="offer" @editOffer="handleEditOffer" @deleteOffer="handleDeleteOffer"/>
+        </div>
+    </div>
+
 </template>
 
 <script>
+import { getLS, SQL, SQLupdate } from '@/assets/js/functions';
+import { toast_notification } from '@/assets/js/nimoToastNotifications';
+import Offer from '@/components/Find/Offer.vue';
+
 export default {
     name: 'MyOffers',
     data() {
         return {
-            offers: [],
             newOffer: {
-                subject_id: '',
-                price_per_hour: '',
+                handle: '@handle',
+                name: 'Name Surname',
+                title: '',
                 description: '',
-                label: '',
-                image: ''
+                pricePerHour: '',
+                currency: 'pln',
+                type: [],
+                badges: ["🔥 popular tutor", "✅ verified"],
+                pfp: `user.png`,
+                favorite: false,
+                rating: 4.5,
+                ratingAmount: 204,
             },
+            type: {
+                online: false,
+                atStudents: false,
+                atTutors: false,
+                otherPlace: false
+            },
+            offers: [],
+            editingOffer: null
         };
     },
-    mounted() {
-        this.fetchUserOffers();
+    components: {
+        Offer
+    },
+    async mounted() {
+        await this.fetchUserData();
+        await this.fetchUserOffers();
     },
     methods: {
-        async fetchUserOffers() {
+        async fetchUserData() {
             try {
-                const uuid = localStorage.getItem('uuid');
+                let LS = getLS();
+                let uuid;
+                try {
+                    uuid = LS.loggedInUser.uuid;
+                } catch (error) {
+                    console.error('Błąd pobierania danych użytkownika:', error);
+                }
                 if (!uuid) {
                     throw new Error('UUID nie znaleziono w localStorage');
                 }
-                
-                const response = await fetch(`http://localhost/path/to/php/fetch_offers.php?creator_id=${uuid}`);
-                if (!response.ok) {
-                    throw new Error(`Błąd HTTP! status: ${response.status}`);
+                let response = await SQL(`SELECT * FROM users WHERE uuid = '${uuid}'`);
+                console.log(response);
+                this.newOffer.handle = response.data[0].handle;
+                this.newOffer.name = response.data[0].fullName;
+                this.newOffer.fullName = response.data[0].fullName;
+                this.newOffer.nick = response.data[0].nick;
+                this.newOffer.rating = response.data[0].rating;
+                this.newOffer.pfp = response.data[0].pfp;
+
+                console.log(this.newOffer);
+            } catch (error) {
+                console.error('Błąd pobierania danych użytkownika:', error);
+            }
+        },
+        async fetchUserOffers() {
+            try {
+                let LS = getLS();
+                let uuid;
+                try {
+                    uuid = LS.loggedInUser.uuid;
+                } catch (error) {
+                    console.error('Błąd pobierania danych użytkownika:', error);
                 }
-                const data = await response.json();
-                this.offers = data;
+
+                if (!uuid) {
+                    throw new Error('UUID nie znaleziono w localStorage');
+                }
+                let response = await SQL(`SELECT * FROM offers INNER JOIN users ON users.uuid = offers.creatorId WHERE creatorId = '${uuid}'`);
+                this.offers = response.data;
+                for (let offer of this.offers) {
+                    offer.image = offer.pfp || 'user.png';
+                }
             } catch (error) {
                 console.error('Błąd pobierania ofert użytkownika:', error);
             }
         },
-        async addOffer() {
+        updateType() {
+            this.newOffer.type = [];
+            if (this.type.online) this.newOffer.type.push('Online');
+            if (this.type.atStudents) this.newOffer.type.push('Students place');
+            if (this.type.atTutors) this.newOffer.type.push('Tutors place');
+            if (this.type.otherPlace) this.newOffer.type.push('Other place');
+        },
+        async addNewOffer() {
             try {
-                const uuid = localStorage.getItem('uuid');
-                if (!uuid) {
-                    throw new Error('UUID nie znaleziono w localStorage');
+                let LS = getLS();
+                let uuid = LS.loggedInUser.uuid;
+
+                let q = `INSERT INTO offers (creatorId, subjectId, title, description, pricePerHour, currency, isOnline, isAtStudents, isAtTutors, isAtOtherLocation) VALUES ('${uuid}', '${this.newOffer.subjectId}', '${this.newOffer.title}', '${this.newOffer.description}', ${this.newOffer.pricePerHour}, '${this.newOffer.currency}', ${this.newOffer.isOnline ? 1 : 0}, ${this.newOffer.isAtStudents ? 1 : 0}, ${this.newOffer.isAtTutors ? 1 : 0}, ${this.newOffer.isAtOtherLocation ? 1 : 0})`;
+                console.log(q);
+                let response = await SQLupdate(q);
+                
+                if (response.success) {
+                    toast_notification({ 
+                        type: 'success', 
+                        label: 'Posted a new Offer!', 
+                        time: 5 
+                    });
+                    this.fetchUserOffers();
+                } else {
+                    toast_notification({ 
+                        type: 'error', 
+                        label: 'Error posting a new Offer!', 
+                        content: response.error,
+                        time: 20
+                    });
                 }
-
-                const response = await fetch('http://localhost/path/to/php/add_offer.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        creator_id: uuid,
-                        subject_id: this.newOffer.subject_id,
-                        price_per_hour: this.newOffer.price_per_hour,
-                        description: this.newOffer.description,
-                        label: this.newOffer.label,
-                        image: this.newOffer.image
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Błąd HTTP! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                console.log('Nowa oferta dodana:', result);
-
-                // Wyczyść pola formularza
-                this.newOffer = {
-                    subject_id: '',
-                    price_per_hour: '',
-                    description: '',
-                    label: '',
-                    image: ''
-                };
-
-                // Pobierz zaktualizowaną listę ofert
-                this.fetchUserOffers();
-
             } catch (error) {
-                console.error('Błąd dodawania nowej oferty:', error);
+                console.error('Error adding offer:', error);
             }
         },
         async deleteOffer(offerId) {
@@ -156,26 +200,118 @@ export default {
             } catch (error) {
                 console.error(`Błąd usuwania oferty ${offerId}:`, error);
             }
+        },
+        async handleEditOffer(offer) {
+            // Load the offer details into a form for editing
+            this.editingOffer = { ...offer };
+            // Potentially redirect to an edit page or open an edit modal
+            console.log('Editing offer:', offer);
+        },
+        async handleDeleteOffer(offerId) {
+            await this.deleteOffer(offerId);
         }
     }
 };
 </script>
 
 <style scoped>
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+    .panel {
+        width: 100%;
+    }
+    .addOfferPanel {
+        padding-bottom: 5rem;
+    }
+    .addOfferPanel .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 3rem;
+    }
 
-form > div {
-    display: flex;
-    flex-direction: column;
-}
 
-.offer-card {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
+    .offerform {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: clamp(20rem, 50%, 40rem);
+    }
+
+
+
+    .checklist {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+
+        --height: 2rem;
+        --width: 3rem;
+        --padding: 0.25rem;
+    }
+    .switch {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+    }
+
+    .switch input {
+        display:none;
+    }
+
+    .slider {
+        background-color: #ccc;
+        cursor: pointer;
+
+        position: relative;
+        height: var(--height);
+        width: var(--width);
+        transition: .2s ease-in-out;
+    }
+
+    .slider:before {
+        background-color: #fff;
+        bottom: var(--padding);
+        content: "";
+        height: calc( var(--height) - 2 * var(--padding) );
+        width: calc( var(--height) - 2 * var(--padding) );
+        left: var(--padding);
+        position: absolute;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #00aaff;
+    }
+
+    input:checked + .slider:before {
+        left: calc( var(--width) - var(--height) + var(--padding) );
+    }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+    .offers {
+    padding: 1rem;
+    border-radius: 2rem;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 
+        minmax(
+            clamp(18rem, 20vw, 30rem),
+            1fr
+            ));
+
+    width: 100%;
+    padding: 1rem 1rem 8rem 1rem;
+    gap: 2rem;
 }
 </style>
