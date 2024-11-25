@@ -1,6 +1,0 @@
-Folder PATH listing for volume Apps
-Volume serial number is A696-3B2D
-P:\XAMPP\TUTORINO\SRC\-F
-Invalid path - \XAMPP\TUTORINO\SRC\-F
-No subfolders exist 
-
